@@ -1,5 +1,6 @@
 #ifndef _BYS_MAP_H_
 #define _BYS_MAP_H_
+#include <stdbool.h>
 #include "bys.h"
 #include "puzzle.h"
 typedef unsigned short MapBasicUnit_t;
@@ -24,6 +25,7 @@ typedef enum
 } MapFun_t;
 
 MapFun_t map_init(Map_t **map, MapBasicUnit_t width, MapBasicUnit_t high, MapStringify_t stringify);
+bool map_isFull(Map_t *map);
 MapFun_t map_putPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset);
 MapFun_t map_tryPutPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset);
 MapFun_t map_deepCopy(Map_t **dstMap, Map_t *srcMap);

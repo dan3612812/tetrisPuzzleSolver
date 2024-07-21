@@ -3,38 +3,18 @@
 #include <string.h>
 #include "puzzle.h"
 
-/**
- * @deprecated
- * @brief
- *
- * @param arrStrPtr
- * @param stringify
- * @param arrayCount
- * @return PuzzleFun_t
- */
-PuzzleFun_t puzzle_array_stringify(PuzzleStringify_t *arrStrPtr, Block_t *stringify, size_t arrayCount)
+PuzzleFun_t puzzle_arrayInit(PuzzleArray_t **puzzleArray, size_t puzzleArrayCount)
 {
-    *arrStrPtr = malloc(arrayCount);
-    if (arrStrPtr == NULL)
+    if (*puzzleArray != NULL)
+    {
+        return PuzzleFunInitPropertyFail;
+    }
+    *puzzleArray = malloc(sizeof(Puzzle_t) * puzzleArrayCount);
+    if (*puzzleArray == NULL)
     {
         return PuzzleFunFail;
     }
-    char *temp = malloc(sizeof(char) * (arrayCount + 1));
-    if (temp == NULL)
-    {
-        goto _free_arrStrPtr;
-    }
-    for (int i = 0; i < arrayCount; i++)
-    {
-        temp[i] = stringify[i] + Blockn2cOffset; // ascii 0 => '0'
-    }
-    temp[arrayCount] = '\0';
-    *arrStrPtr = temp;
     return PuzzleFunOk;
-
-_free_arrStrPtr:
-    free(arrStrPtr);
-    return PuzzleFunFail;
 }
 
 PuzzleFun_t puzzle_init(Puzzle_t **puzzle, PuzzleBasicUnit_t width, PuzzleBasicUnit_t high, PuzzleStringify_t stringify)

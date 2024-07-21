@@ -1,6 +1,7 @@
 #ifndef _BYS_BIT_PARSER_H_
 #define _BYS_BIT_PARSER_H_
 #include <stdbool.h>
+#include <stddef.h>
 #include "bys.h"
 
 void bp_stringTobit(BitUint_t *uintDst, BlockStringify_t stringify);

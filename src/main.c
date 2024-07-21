@@ -1,50 +1,67 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "map.h"
 #include "puzzle.h"
-#include "bitParser.h"
-void gameA(void)
-{
-    // the map
-    Map_t *map = NULL;
-    map_init(&map, 6, 4, "000000000000000000000000");
-    map_printg(map);
-    // the puzzle
-    Puzzle_t *pa, *pb, *pc, *pd, *pe, *pf;
-    puzzle_init(&pa, 2, 3, "101101");
-    puzzle_init(&pb, 3, 2, "110011");
-    puzzle_init(&pc, 3, 2, "111010");
-    puzzle_init(&pd, 3, 2, "100111");
-    puzzle_init(&pe, 3, 2, "111010");
-    puzzle_init(&pf, 2, 3, "010111");
-    puzzle_prints(pa);
-    printf("PutResult:%d\n", map_putPuzzle(map, pa, 4));
-    map_printg(map);
-}
+#include "agent.h"
 
-void testA(void)
+// TODO: support the multiple process
+// TODO: support the turning the puzzle clockwise option
+void testGameA()
 {
-    Map_t *srcMap = NULL, *dstMap = NULL;
-    map_init(&srcMap, 2, 2, "0101");
-    printf("%d\n", map_deepCopy(&dstMap, srcMap));
+    // TODO: dynamic load the map
+    Map_t *map = NULL;
+    map_init(&map, 3, 3, "000000000");
+    size_t puzzleCount = 3;
+    PuzzleArray_t *parr = NULL;
+    // TODO: dynamic load the puzzles
+    puzzle_arrayInit(&parr, puzzleCount);
+    puzzle_init(&parr[0], 2, 3, "101011");
+    puzzle_init(&parr[1], 2, 2, "1110");
+    puzzle_init(&parr[2], 1, 2, "11");
+    // TODO: auto generate the permutation
+    AgentPermutation_t ap = malloc(sizeof(uint8_t) * puzzleCount);
+    // ap[0] = 2, ap[1] = 1, ap[2] = 0; // fail
+    ap[0] = 0, ap[1] = 1, ap[2] = 2; // success
+    Agent_t *agent = NULL;
+    agent_init(&agent, map, parr, puzzleCount);
+    if (agent_verificationPermutation(agent, ap, puzzleCount) == AgentFunOk)
+    {
+        agent_printAnswer(agent, ap, puzzleCount);
+    }
+}
+void testGameB(void)
+{
+    // FIXME: check it the putPuzzle have bug!!!
+    Map_t *map = NULL;
+    map_init(&map, 7, 5, "00000000000000000100000000000000000");
+    size_t puzzleCount = 8;
+    PuzzleArray_t *parr = NULL;
+    puzzle_arrayInit(&parr, puzzleCount);
+    puzzle_init(&parr[0], 3, 3, "100100111");
+    puzzle_init(&parr[1], 4, 2, "11110001");
+    puzzle_init(&parr[2], 2, 3, "111110");
+    puzzle_init(&parr[3], 3, 1, "111");
+    puzzle_init(&parr[4], 2, 3, "101110");
+    puzzle_init(&parr[5], 2, 3, "010111");
+    puzzle_init(&parr[6], 3, 2, "111110");
+    puzzle_init(&parr[7], 2, 2, "0111");
+    AgentPermutation_t ap = malloc(sizeof(uint8_t) * puzzleCount);
+    ap[0] = 0, ap[1] = 1, ap[2] = 2, ap[3] = 3, ap[4] = 4, ap[5] = 5, ap[6] = 6, ap[7] = 7;
+    Agent_t *agent = NULL;
+    agent_init(&agent, map, parr, puzzleCount);
+    if (agent_verificationPermutation(agent, ap, puzzleCount) == AgentFunOk)
+    {
+        agent_printAnswer(agent, ap, puzzleCount);
+    }
+    else
+    {
+        printf("FIALED\n");
+    }
 }
 
 int main(void)
 {
-    Map_t *map = NULL;
-    map_init(&map, 3, 3, "000000000");
-    Puzzle_t *parr[3];
-    puzzle_init(&parr[0], 2, 3, "101011");
-    puzzle_init(&parr[1], 2, 2, "1110");
-    puzzle_init(&parr[2], 1, 2, "11");
-    printf("%ld\n", sizeof(parr) / sizeof(parr[0]));
-    for (int i = 0; i < 3; i++)
-    {
-        puzzle_printg(parr[i]);
-        printf("========\n");
-    }
-
+    testGameA();
+    // testGameB();
     return 0;
 }

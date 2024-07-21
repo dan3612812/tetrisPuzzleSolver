@@ -43,7 +43,6 @@ MapFun_t map_putPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset)
     size_t offsetRemainder = offset % map->width;
     int puzzleIndex = 0;
 
-    // printf("mapIO:%d\n", mapIndexOffset);
     for (int i = 0; i < paddingPuzzleLength; i++)
     {
         int iRemainder = i % map->width;
@@ -54,21 +53,7 @@ MapFun_t map_putPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset)
             int mapIndexOffset = i + (offset / map->width) * map->width;
             // assign puzzle value to map
             map->stringify[mapIndexOffset] = puzzle->stringify[puzzleIndex++];
-            // paddingPuzzleToMapWidth[i] = puzzle->stringify[puzzleIndex++];
         }
-
-        // backup
-        // if (iRemainder < offsetRemainder || iRemainder + 1 > puzzle->width + offsetRemainder)
-        // {
-        //     // puzzle left padding(get map origin value)
-        // }
-        // else
-        // {
-        //     int mapIndexOffset = i + (offset / map->width) * map->width;
-        //     // assign puzzle value to map
-        //     map->stringify[mapIndexOffset] = puzzle->stringify[puzzleIndex++];
-        //     // paddingPuzzleToMapWidth[i] = puzzle->stringify[puzzleIndex++];
-        // }
     }
     return MapFunOk;
 }
@@ -146,10 +131,21 @@ _free_dstMap:
     free(*dstMap);
     return MapFunFail;
 }
+bool map_isFull(Map_t *map)
+{
+    for (int i = 0; i < strlen(map->stringify); i++)
+    {
+        if (map->stringify[i] == Blockn2cOffset)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
 void map_prints(Map_t *map)
 {
-    printf("The Map:\n\twidth:%d\n\thigh:%d\n\tstringify:%s\n", map->high, map->width, map->stringify);
+    printf("The Map:\n\twidth:%d\n\thigh:%d\n\tstringify:%s\n", map->width, map->high, map->stringify);
 }
 void map_printg(Map_t *map)
 {

@@ -8,17 +8,20 @@ typedef struct
 {
     Map_t *map;
     MapStringify_t originMapStringify;
-    Puzzle_t *puzzleArray;
+    PuzzleArray_t *puzzleArray;
     uint8_t puzzleCount;
-    uint8_t puzzleIndex;
+    uint8_t *offsetArray;
 } Agent_t;
 
 typedef enum
 {
     AgentFunOk = FunOk,
     AgentFunFail = FunFail,
+    AgentFunArgumentFail = 2,
 } AgentFun_t;
-typedef char *AgentPermutation_t;
+typedef uint8_t *AgentPermutation_t;
 
-AgentFun_t agent_init(Agent_t *agent, Map_t *map, Puzzle_t *puzzleArray, uint8_t puzzleCount);
+AgentFun_t agent_init(Agent_t **agent, Map_t *map, PuzzleArray_t *puzzleArray, uint8_t puzzleCount);
+AgentFun_t agent_verificationPermutation(Agent_t *agent, AgentPermutation_t permutation, uint8_t permutationCount);
+AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uint8_t permutationCount);
 #endif
