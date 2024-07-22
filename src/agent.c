@@ -53,7 +53,7 @@ AgentFun_t agent_verificationPermutation(Agent_t *agent, AgentPermutation_t perm
             {
                 // DEBUG usage
                 // map_printg(map);
-                // printf("-------------\n");
+                // printf("-------------[%d]\n", j);
                 break;
             }
         }
@@ -73,10 +73,13 @@ AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uin
     }
     PuzzleArray_t *pa = agent->puzzleArray;
     Map_t *map = agent->map;
-    // for each the block of map
-    for (int i = 0; i < strlen(map->stringify); i++)
+    size_t mapStringifyLen = strlen(map->stringify);
+    MapStringify_t answer = malloc(mapStringifyLen + 1);
+    answer[mapStringifyLen + 1] = '\0';
+    // for each the block of map answer
+    for (int i = 0; i < mapStringifyLen; i++)
     {
-        map->stringify[i] = map->stringify[i] == Blockn2cOffset + BlockFILL ? '@' : map->stringify[i];
+        answer[i] = map->stringify[i] == Blockn2cOffset + BlockFILL ? '@' : map->stringify[i];
     }
     // for each the puzzle the order by permutation
     for (int i = 0; i < permutationCount; i++)
@@ -90,9 +93,9 @@ AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uin
                 // for each the puzzle of map , change the char that start of 'A'
                 for (int k = 0; k < strlen(map->stringify); k++)
                 {
-                    if (map->stringify[k] == Blockn2cOffset + 1)
+                    if (map->stringify[k] == Blockn2cOffset + 1 && answer[k] == Blockn2cOffset)
                     {
-                        map->stringify[k] = 65 + i;
+                        answer[k] = 65 + i;
                     }
                 }
                 break;
@@ -101,18 +104,20 @@ AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uin
     }
     // print the answer
     printf("Answer:\n");
-    for (int i = 0; i < strlen(map->stringify); i++)
+    for (int i = 0; i < mapStringifyLen; i++)
     {
         if (i % map->width == 0)
         {
             printf("\t");
         }
-        printf("%c", map->stringify[i]);
+        printf("%c", answer[i]);
         if ((i + 1) % map->width == 0)
         {
             printf("\n");
         }
     }
+    // recover the map.stringify
     memcpy(map->stringify, agent->originMapStringify, strlen(map->stringify) + 1);
+    free(answer);
     return AgentFunOk;
 }

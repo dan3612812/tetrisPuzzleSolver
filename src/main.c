@@ -31,7 +31,6 @@ void testGameA()
 }
 void testGameB(void)
 {
-    // FIXME: check it the putPuzzle have bug!!!
     Map_t *map = NULL;
     map_init(&map, 7, 5, "00000000000000000100000000000000000");
     size_t puzzleCount = 8;
@@ -62,6 +61,6 @@ void testGameB(void)
 int main(void)
 {
     testGameA();
-    // testGameB();
+    testGameB();
     return 0;
 }

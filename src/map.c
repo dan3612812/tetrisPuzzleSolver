@@ -51,8 +51,8 @@ MapFun_t map_putPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset)
         if (iRemainder >= offsetRemainder && iRemainder + 1 <= puzzle->width + offsetRemainder)
         {
             int mapIndexOffset = i + (offset / map->width) * map->width;
-            // assign puzzle value to map
-            map->stringify[mapIndexOffset] = puzzle->stringify[puzzleIndex++];
+            // or the puzzle value to map
+            map->stringify[mapIndexOffset] |= puzzle->stringify[puzzleIndex++];
         }
     }
     return MapFunOk;
@@ -90,6 +90,7 @@ MapFun_t map_tryPutPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset)
         partOfMap[i] = map->stringify[positionIndex];
     }
     // check the puzzle can into the partOfMap
+    // the puzzle size can't over the 64 at here.
     BitUint_t p, m;
     bp_stringTobit(&p, puzzle->stringify);
     bp_stringTobit(&m, partOfMap);
