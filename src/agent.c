@@ -121,3 +121,78 @@ AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uin
     free(answer);
     return AgentFunOk;
 }
+void agent_printPermutation(AgentPermutation_t per, size_t perCount)
+{
+    printf("Permutation:\n\t");
+    for (int i = 0; i < perCount; i++)
+    {
+        printf("%d", per[i]);
+    }
+    printf("\n");
+}
+
+AgentFun_t agent_auto(Agent_t *agent, size_t count)
+{
+    AgentFun_t result = AgentFunFail;
+    AgentFun_t attempts = 1;
+    // make all permutation
+    AgentPermutation_t permutation = malloc(sizeof(uint8_t) * count);
+    // init the permutation
+    for (size_t i = 0; i < count; i++)
+    {
+        permutation[i] = i;
+    }
+    // check the first permutation
+    if (agent_verificationPermutation(agent, permutation, count) == AgentFunOk)
+    {
+        agent_printAnswer(agent, permutation, count);
+        result = AgentFunOk;
+        goto _result;
+    }
+    // The others permutation
+    while (1)
+    {
+        int j = count - 2;
+        while (j >= 0 && permutation[j] > permutation[j + 1])
+        {
+            --j;
+        }
+        if (j < 0)
+        {
+            break;
+        }
+        int k = count - 1;
+        while (permutation[j] > permutation[k])
+        {
+            --k;
+        }
+        // swap j and k
+        uint8_t temp = permutation[j];
+        permutation[j] = permutation[k];
+        permutation[k] = temp;
+
+        int r = count - 1;
+        int s = j + 1;
+        while (r > s)
+        {
+            temp = permutation[r];
+            permutation[r] = permutation[s];
+            permutation[s] = temp;
+            --r;
+            ++s;
+        }
+        // call the agent to check the permutation
+        attempts++;
+        if (agent_verificationPermutation(agent, permutation, count) == AgentFunOk)
+        {
+            result = AgentFunOk;
+            printf("attempts:%d\n", attempts);
+            agent_printPermutation(permutation, count);
+            agent_printAnswer(agent, permutation, count);
+            goto _result;
+        }
+    }
+_result:
+    free(permutation);
+    return result;
+}

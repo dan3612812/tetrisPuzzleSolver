@@ -24,4 +24,5 @@ typedef uint8_t *AgentPermutation_t;
 AgentFun_t agent_init(Agent_t **agent, Map_t *map, PuzzleArray_t *puzzleArray, uint8_t puzzleCount);
 AgentFun_t agent_verificationPermutation(Agent_t *agent, AgentPermutation_t permutation, uint8_t permutationCount);
 AgentFun_t agent_printAnswer(Agent_t *agent, AgentPermutation_t permutation, uint8_t permutationCount);
+AgentFun_t agent_auto(Agent_t *agent, size_t count);
 #endif
