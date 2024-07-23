@@ -94,6 +94,7 @@ MapFun_t map_tryPutPuzzle(Map_t *map, Puzzle_t *puzzle, size_t offset)
     BitUint_t p, m;
     bp_stringTobit(&p, puzzle->stringify);
     bp_stringTobit(&m, partOfMap);
+    free(partOfMap);
     if (bp_bitwiseHaveTrueBit(p & m))
     {
         // true mean collision
